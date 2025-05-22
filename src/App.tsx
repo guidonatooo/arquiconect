@@ -12,6 +12,8 @@ import ForSuppliers from "./pages/ForSuppliers";
 import Pricing from "./pages/Pricing";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/precos" element={<Pricing />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contato" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/cadastro" element={<Signup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
