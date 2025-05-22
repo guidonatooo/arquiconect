@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -87,7 +86,7 @@ const Index = () => {
       content: "A inteligência artificial da plataforma me recomendou fornecedores que eu nem conhecia, mas que tinham exatamente o tipo de material que eu estava procurando para um projeto especial.",
       author: "Patrícia Mello",
       role: "Designer de Interiores",
-      image: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHdvbWFuJTIwcHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      image: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
     },
   ];
 
@@ -119,7 +118,7 @@ const Index = () => {
   const plans = [
     {
       title: "Básico",
-      price: "Grátis",
+      price: "R$199",
       description: "Ideal para fornecedores iniciando na plataforma",
       features: [
         "3 propostas por mês",
@@ -133,7 +132,7 @@ const Index = () => {
     },
     {
       title: "Profissional",
-      price: "R$149",
+      price: "R$399",
       description: "Perfeito para fornecedores em crescimento",
       features: [
         "15 propostas por mês",
@@ -149,7 +148,7 @@ const Index = () => {
     },
     {
       title: "Empresa",
-      price: "R$299",
+      price: "R$799",
       description: "Para fornecedores estabelecidos que buscam expansão",
       features: [
         "Propostas ilimitadas",
