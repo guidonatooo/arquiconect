@@ -65,7 +65,8 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-montserrat font-semibold mb-4">Contato</h3>
             <p className="mb-2">contato@arquiconnect.com.br</p>
-            <p className="mb-4">(11) 3456-7890</p>
+            <p className="mb-1">(19) 99184-8687</p>
+            <p className="mb-4">(19) 99015-5156</p>
             
             <h3 className="text-lg font-montserrat font-semibold mb-4 mt-6">Newsletter</h3>
             <form className="flex flex-col sm:flex-row gap-2">
