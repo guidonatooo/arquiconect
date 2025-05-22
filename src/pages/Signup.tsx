@@ -19,9 +19,9 @@ const signupSchema = z.object({
   confirmPassword: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
   phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos").optional(),
   accountType: z.enum(["architect", "supplier"]),
-  acceptTerms: z.literal(true, {
-    errorMap: () => ({ message: "Você precisa aceitar os termos" }),
-  }),
+  acceptTerms: z.boolean().refine(val => val === true, {
+    message: "Você precisa aceitar os termos"
+  })
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não coincidem",
   path: ["confirmPassword"],
