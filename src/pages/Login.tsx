@@ -1,10 +1,9 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -23,6 +22,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -41,6 +41,7 @@ const Login = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       toast.success("Login realizado com sucesso!");
       // Aqui você adicionaria a lógica real de autenticação
+      navigate("/dashboard");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       toast.error("Falha ao fazer login. Verifique suas credenciais.");
