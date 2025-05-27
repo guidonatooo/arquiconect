@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -10,6 +11,7 @@ const Dashboard = () => {
     name: "Usuário",
     accountType: "architect",
   });
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     // Simulação de logout
@@ -40,17 +42,26 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold mb-4">Painel de Controle</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div 
+                  className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => navigate("/projects")}
+                >
                   <h3 className="font-medium text-lg text-primary">Projetos</h3>
                   <p className="text-gray-600 mt-1">Gerencie seus projetos</p>
                 </div>
                 
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div 
+                  className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => navigate("/projects")}
+                >
                   <h3 className="font-medium text-lg text-primary">Mensagens</h3>
                   <p className="text-gray-600 mt-1">Veja suas mensagens recentes</p>
                 </div>
                 
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div 
+                  className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => navigate("/projects")}
+                >
                   <h3 className="font-medium text-lg text-primary">Contatos</h3>
                   <p className="text-gray-600 mt-1">Gerenciar seus contatos</p>
                 </div>
