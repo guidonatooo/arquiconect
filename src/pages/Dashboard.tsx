@@ -5,20 +5,22 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
-  const [userData] = useState({
-    name: "Usuário",
-    accountType: "architect",
-  });
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    // Simulação de logout
+    logout();
     toast.success("Logout realizado com sucesso!");
-    // Aqui você adicionaria a lógica real de logout
-    window.location.href = "/login";
+    navigate("/login");
   };
+
+  if (!user) {
+    navigate("/login");
+    return null;
+  }
 
   return (
     <>
@@ -28,9 +30,9 @@ const Dashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-bold text-gray-800">Bem-vindo(a), {userData.name}!</h1>
+                <h1 className="text-3xl font-bold text-gray-800">Bem-vindo(a), {user.name}!</h1>
                 <p className="text-gray-600 mt-1">
-                  {userData.accountType === "architect" ? "Arquiteto" : "Fornecedor"}
+                  {user.accountType === "architect" ? "Arquiteto" : "Fornecedor"}
                 </p>
               </div>
               <Button variant="outline" onClick={handleLogout}>
@@ -44,15 +46,17 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div 
                   className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => navigate("/projects")}
+                  onClick={() => navigate(user.accountType === "architect" ? "/projects" : "/suppliers")}
                 >
                   <h3 className="font-medium text-lg text-primary">Projetos</h3>
-                  <p className="text-gray-600 mt-1">Gerencie seus projetos</p>
+                  <p className="text-gray-600 mt-1">
+                    {user.accountType === "architect" ? "Gerencie seus projetos" : "Veja projetos disponíveis"}
+                  </p>
                 </div>
                 
                 <div 
                   className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => navigate("/projects")}
+                  onClick={() => navigate(user.accountType === "architect" ? "/projects" : "/suppliers")}
                 >
                   <h3 className="font-medium text-lg text-primary">Mensagens</h3>
                   <p className="text-gray-600 mt-1">Veja suas mensagens recentes</p>
@@ -60,7 +64,7 @@ const Dashboard = () => {
                 
                 <div 
                   className="bg-primary/5 border border-primary/20 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => navigate("/projects")}
+                  onClick={() => navigate(user.accountType === "architect" ? "/projects" : "/suppliers")}
                 >
                   <h3 className="font-medium text-lg text-primary">Contatos</h3>
                   <p className="text-gray-600 mt-1">Gerenciar seus contatos</p>

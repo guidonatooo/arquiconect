@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -11,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email("Digite um e-mail válido"),
@@ -23,6 +23,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -37,11 +38,19 @@ const Login = () => {
     setIsLoading(true);
     try {
       console.log("Login values:", values);
-      // Simulação de login
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await login(values.email, values.password);
+      
+      // Busca o tipo de usuário do localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
       toast.success("Login realizado com sucesso!");
-      // Aqui você adicionaria a lógica real de autenticação
-      navigate("/dashboard");
+      
+      // Redireciona baseado no tipo de usuário
+      if (user.accountType === 'supplier') {
+        navigate("/suppliers");
+      } else {
+        navigate("/projects"); // arquitetos vão para projetos
+      }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       toast.error("Falha ao fazer login. Verifique suas credenciais.");

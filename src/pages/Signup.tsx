@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const signupSchema = z.object({
   name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
@@ -31,6 +31,8 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { signup } = useAuth();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -49,10 +51,15 @@ const Signup = () => {
     setIsLoading(true);
     try {
       console.log("Signup values:", values);
-      // Simulação de cadastro
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await signup(values);
       toast.success("Cadastro realizado com sucesso!");
-      // Aqui você adicionaria a lógica real de cadastro
+      
+      // Redireciona baseado no tipo de usuário
+      if (values.accountType === 'supplier') {
+        navigate("/suppliers");
+      } else {
+        navigate("/projects"); // arquitetos vão para projetos
+      }
     } catch (error) {
       console.error("Erro ao fazer cadastro:", error);
       toast.error("Falha ao criar conta. Tente novamente.");
