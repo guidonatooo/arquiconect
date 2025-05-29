@@ -1,13 +1,29 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, LogOut, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast.success("Logout realizado com sucesso!");
+    navigate("/");
+    setIsMenuOpen(false);
+  };
+
+  const getUserTypeLabel = () => {
+    return user?.accountType === "architect" ? "Arquiteto(a)" : "Fornecedor(a)";
   };
 
   return (
@@ -28,6 +44,11 @@ const Header = () => {
           <Link to="/" className="text-gray-700 hover:text-primary font-medium">
             Home
           </Link>
+          {isAuthenticated && (
+            <Link to="/dashboard" className="text-gray-700 hover:text-primary font-medium">
+              Dashboard
+            </Link>
+          )}
           <Link to="/como-funciona" className="text-gray-700 hover:text-primary font-medium">
             Como Funciona
           </Link>
@@ -49,12 +70,33 @@ const Header = () => {
         </nav>
 
         <div className="hidden lg:flex items-center space-x-4">
-          <Link to="/login" className="text-primary font-medium hover:text-primary-dark">
-            Login
-          </Link>
-          <Link to="/cadastro" className="btn-accent">
-            Cadastre-se
-          </Link>
+          {isAuthenticated && user ? (
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 text-gray-700">
+                <User size={18} />
+                <span className="text-sm">
+                  {user.name} • {getUserTypeLabel()}
+                </span>
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={handleLogout}
+                className="flex items-center space-x-2"
+              >
+                <LogOut size={16} />
+                <span>Sair</span>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <Link to="/login" className="text-primary font-medium hover:text-primary-dark">
+                Login
+              </Link>
+              <Link to="/cadastro" className="btn-accent">
+                Cadastre-se
+              </Link>
+            </>
+          )}
         </div>
         
         <button 
@@ -77,6 +119,15 @@ const Header = () => {
             >
               Home
             </Link>
+            {isAuthenticated && (
+              <Link 
+                to="/dashboard" 
+                className="text-gray-700 hover:text-primary font-medium py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+            )}
             <Link 
               to="/como-funciona" 
               className="text-gray-700 hover:text-primary font-medium py-2"
@@ -119,22 +170,42 @@ const Header = () => {
             >
               Contato
             </Link>
-            <div className="flex flex-col space-y-3 pt-4 border-t">
-              <Link 
-                to="/login" 
-                className="text-primary font-medium hover:text-primary-dark py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login
-              </Link>
-              <Link 
-                to="/cadastro" 
-                className="btn-accent text-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Cadastre-se
-              </Link>
-            </div>
+            
+            {isAuthenticated && user ? (
+              <div className="flex flex-col space-y-3 pt-4 border-t">
+                <div className="flex items-center space-x-2 text-gray-700 py-2">
+                  <User size={18} />
+                  <span className="text-sm">
+                    {user.name} • {getUserTypeLabel()}
+                  </span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={handleLogout}
+                  className="flex items-center justify-center space-x-2 w-full"
+                >
+                  <LogOut size={16} />
+                  <span>Sair</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-3 pt-4 border-t">
+                <Link 
+                  to="/login" 
+                  className="text-primary font-medium hover:text-primary-dark py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/cadastro" 
+                  className="btn-accent text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Cadastre-se
+                </Link>
+              </div>
+            )}
           </nav>
         </div>
       )}
