@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -51,7 +52,17 @@ const Signup = () => {
     setIsLoading(true);
     try {
       console.log("Signup values:", values);
-      await signup(values);
+      
+      // Criar objeto compatível com a interface User
+      const userData = {
+        name: values.name,
+        email: values.email,
+        accountType: values.accountType,
+        phone: values.phone || undefined,
+        password: values.password
+      };
+      
+      await signup(userData);
       toast.success("Cadastro realizado com sucesso!");
       
       // Redireciona baseado no tipo de usuário
