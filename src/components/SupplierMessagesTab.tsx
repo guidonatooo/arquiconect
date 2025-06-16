@@ -4,9 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageSquare } from "lucide-react";
+import ChatModal from "./ChatModal";
 
 const SupplierMessagesTab = () => {
+  const [selectedProject, setSelectedProject] = useState("");
+  const [showChat, setShowChat] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+
+  const [projects] = useState([
+    { id: "1", name: "Casa Moderna - Centro" },
+    { id: "2", name: "Escritório Comercial - Vila Madalena" },
+    { id: "3", name: "Residência Familiar - Morumbi" }
+  ]);
+
   const [conversations] = useState([
     {
       id: 1,
@@ -37,6 +49,41 @@ const SupplierMessagesTab = () => {
     }
   ]);
 
+  const [messageHistory] = useState({
+    "1": [
+      {
+        id: 1,
+        sender: "Ana Costa",
+        message: "Olá! Vi sua proposta para o projeto Casa Moderna. Estou interessada nos materiais que você oferece.",
+        timestamp: "2024-01-20 09:00",
+        isFromUser: false
+      },
+      {
+        id: 2,
+        sender: "Você",
+        message: "Oi Ana! Obrigado pelo interesse. Posso oferecer todos os materiais listados com 15% de desconto.",
+        timestamp: "2024-01-20 09:15",
+        isFromUser: true
+      },
+      {
+        id: 3,
+        sender: "Ana Costa",
+        message: "Perfeito! Gostaria de agendar uma reunião para discutir os detalhes.",
+        timestamp: "2024-01-20 10:30",
+        isFromUser: false
+      }
+    ],
+    "2": [
+      {
+        id: 1,
+        sender: "Roberto Lima",
+        message: "Sua proposta foi a melhor! Quando podemos iniciar a entrega?",
+        timestamp: "2024-01-19 14:00",
+        isFromUser: false
+      }
+    ]
+  });
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Aprovada":
@@ -50,6 +97,15 @@ const SupplierMessagesTab = () => {
     }
   };
 
+  const filteredConversations = selectedProject 
+    ? conversations.filter(conv => conv.projectName === projects.find(p => p.id === selectedProject)?.name)
+    : conversations;
+
+  const handleOpenChat = (conversation) => {
+    setSelectedConversation(conversation);
+    setShowChat(true);
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -60,16 +116,38 @@ const SupplierMessagesTab = () => {
           </p>
         </CardHeader>
         <CardContent>
-          {conversations.length === 0 ? (
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-2">Filtrar por Projeto</label>
+            <Select value={selectedProject} onValueChange={setSelectedProject}>
+              <SelectTrigger className="max-w-md">
+                <SelectValue placeholder="Todos os projetos" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Todos os projetos</SelectItem>
+                {projects.map((project) => (
+                  <SelectItem key={project.id} value={project.id}>
+                    {project.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {filteredConversations.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">Nenhuma conversa ainda.</p>
+              <p className="text-gray-500">
+                {selectedProject 
+                  ? "Nenhuma conversa encontrada para este projeto." 
+                  : "Nenhuma conversa ainda."
+                }
+              </p>
               <p className="text-sm text-gray-400 mt-2">
                 Envie propostas para começar a conversar com arquitetos.
               </p>
             </div>
           ) : (
             <div className="space-y-4">
-              {conversations.map((conversation) => (
+              {filteredConversations.map((conversation) => (
                 <Card key={conversation.id} className="hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -100,7 +178,11 @@ const SupplierMessagesTab = () => {
                       <Badge className={getStatusColor(conversation.status)}>
                         {conversation.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleOpenChat(conversation)}
+                      >
                         <MessageSquare className="w-4 h-4 mr-2" />
                         Abrir Conversa
                       </Button>
@@ -112,6 +194,17 @@ const SupplierMessagesTab = () => {
           )}
         </CardContent>
       </Card>
+
+      {selectedConversation && (
+        <ChatModal
+          open={showChat}
+          onClose={() => setShowChat(false)}
+          contactName={selectedConversation.architect}
+          projectName={selectedConversation.projectName}
+          status={selectedConversation.status}
+          initialMessages={messageHistory[selectedConversation.id.toString()] || []}
+        />
+      )}
     </div>
   );
 };
