@@ -80,7 +80,7 @@ const Index = () => {
       content: "Nossa empresa de mármores e granitos aumentou em 40% o fechamento de novos projetos depois que começamos a utilizar a plataforma. Um investimento que se paga rapidamente.",
       author: "Marcelo Santos",
       role: "Fornecedor de Mármores",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YnVzaW5lc3MlMjBtYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
     },
     {
       content: "A inteligência artificial da plataforma me recomendou fornecedores que eu nem conhecia, mas que tinham exatamente o tipo de material que eu estava procurando para um projeto especial.",
@@ -186,7 +186,7 @@ const Index = () => {
     {
       title: "Inteligência Artificial Transformando Arquitetura",
       excerpt: "Como as novas tecnologias de IA estão ajudando arquitetos a projetar espaços mais eficientes e personalizados.",
-      image: "https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
       category: "Tecnologia",
       date: "28 Mai 2023",
       slug: "ia-transformando-arquitetura",
