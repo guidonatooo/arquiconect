@@ -1,4 +1,3 @@
-
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CallToAction from '../components/CallToAction';
@@ -21,7 +20,7 @@ const Pricing = () => {
         { text: "API de integração", included: false },
       ],
       popular: false,
-      buttonText: "Contratar Plano"
+      buttonText: "Assine Agora!"
     },
     {
       name: "Profissional",
@@ -38,7 +37,7 @@ const Pricing = () => {
         { text: "API de integração", included: false },
       ],
       popular: true,
-      buttonText: "Contratar Plano"
+      buttonText: "Assine Agora!"
     },
     {
       name: "Premium",
@@ -55,7 +54,7 @@ const Pricing = () => {
         { text: "API de integração", included: true },
       ],
       popular: false,
-      buttonText: "Contratar Plano"
+      buttonText: "Assine Agora!"
     }
   ];
 

@@ -12,12 +12,17 @@ import ForArchitects from "./pages/ForArchitects";
 import ForSuppliers from "./pages/ForSuppliers";
 import Pricing from "./pages/Pricing";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Suppliers from "./pages/Suppliers";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookiePolicy from "./pages/CookiePolicy";
+import Copyright from "./pages/Copyright";
 
 const queryClient = new QueryClient();
 
@@ -35,12 +40,17 @@ const App = () => (
             <Route path="/para-fornecedores" element={<ForSuppliers />} />
             <Route path="/precos" element={<Pricing />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/contato" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/termos" element={<TermsOfService />} />
+            <Route path="/privacidade" element={<PrivacyPolicy />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
+            <Route path="/copyright" element={<Copyright />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
