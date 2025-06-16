@@ -1,182 +1,217 @@
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 const CookiePolicy = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      <main className="flex-grow">
-        <section className="py-16 bg-secondary">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-montserrat font-bold mb-6 text-primary text-center">
-              Política de Cookies
-            </h1>
-            <p className="text-lg text-gray-600 text-center max-w-3xl mx-auto">
-              Última atualização: {new Date().toLocaleDateString('pt-BR')}
+      <main className="flex-grow py-16">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h1 className="text-4xl font-montserrat font-bold mb-8 text-primary">
+            Política de Cookies
+          </h1>
+          
+          <div className="prose prose-lg max-w-none">
+            <p className="text-gray-600 mb-8">
+              <strong>Última atualização:</strong> 16 de junho de 2025
             </p>
-          </div>
-        </section>
 
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="prose prose-lg max-w-none">
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                O que são Cookies?
+              </h2>
+              <p>
+                Cookies são pequenos arquivos de texto que são armazenados no seu dispositivo quando você visita nosso site. 
+                Eles nos ajudam a melhorar sua experiência, lembrar suas preferências e fornecer funcionalidades essenciais.
+              </p>
+            </section>
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Como Utilizamos os Cookies
+              </h2>
               
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">1. O que são Cookies</h2>
-              <p className="mb-6 text-gray-700">
-                Cookies são pequenos arquivos de texto armazenados no seu dispositivo (computador, tablet ou celular) quando você visita um site. Eles permitem que o site reconheça seu dispositivo e armazene algumas informações sobre suas preferências ou ações passadas.
-              </p>
-
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">2. Como Utilizamos Cookies</h2>
-              <p className="mb-4 text-gray-700">O ArquiConnect utiliza cookies para:</p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li>Manter você conectado à sua conta durante a sessão</li>
-                <li>Lembrar suas preferências e configurações</li>
-                <li>Analisar como nosso site é usado para melhorar a experiência</li>
-                <li>Personalizar conteúdo e recomendações</li>
-                <li>Fornecer recursos de segurança e prevenção a fraudes</li>
-                <li>Exibir anúncios relevantes (quando aplicável)</li>
+              <h3 className="text-xl font-semibold mb-3">Cookies Essenciais</h3>
+              <ul className="mb-4">
+                <li>Manter você logado durante sua sessão</li>
+                <li>Lembrar suas preferências de idioma</li>
+                <li>Garantir a segurança do site</li>
+                <li>Permitir navegação adequada</li>
               </ul>
 
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">3. Tipos de Cookies que Utilizamos</h2>
-              
-              <h3 className="text-xl font-semibold mb-4 text-primary">3.1 Cookies Essenciais</h3>
-              <p className="mb-4 text-gray-700">
-                Estes cookies são necessários para o funcionamento básico do site e não podem ser desabilitados:
-              </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Autenticação:</strong> mantêm você logado durante a sessão</li>
-                <li><strong>Segurança:</strong> protegem contra ataques maliciosos</li>
-                <li><strong>Funcionalidade:</strong> lembram configurações essenciais</li>
+              <h3 className="text-xl font-semibold mb-3">Cookies de Performance</h3>
+              <ul className="mb-4">
+                <li>Coletar informações sobre como você usa nosso site</li>
+                <li>Ajudar-nos a melhorar a funcionalidade</li>
+                <li>Identificar páginas mais populares</li>
+                <li>Detectar problemas técnicos</li>
               </ul>
 
-              <h3 className="text-xl font-semibold mb-4 text-primary">3.2 Cookies de Performance</h3>
-              <p className="mb-4 text-gray-700">
-                Coletam informações sobre como o site é usado para melhorar a performance:
-              </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Google Analytics:</strong> analisa tráfego e comportamento dos usuários</li>
-                <li><strong>Hotjar:</strong> mapas de calor e gravações de sessão (anonimizadas)</li>
-                <li><strong>Métricas internas:</strong> monitoramento de performance do sistema</li>
+              <h3 className="text-xl font-semibold mb-3">Cookies de Marketing</h3>
+              <ul className="mb-4">
+                <li>Personalizar anúncios relevantes</li>
+                <li>Medir a eficácia de nossas campanhas</li>
+                <li>Limitar o número de vezes que você vê um anúncio</li>
+                <li>Compartilhar dados com parceiros publicitários</li>
               </ul>
+            </section>
 
-              <h3 className="text-xl font-semibold mb-4 text-primary">3.3 Cookies de Funcionalidade</h3>
-              <p className="mb-4 text-gray-700">
-                Melhoram a experiência do usuário lembrando escolhas e preferências:
-              </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Preferências de idioma:</strong> lembram idioma escolhido</li>
-                <li><strong>Layout:</strong> mantêm configurações de exibição</li>
-                <li><strong>Filtros:</strong> salvam filtros aplicados em pesquisas</li>
-              </ul>
-
-              <h3 className="text-xl font-semibold mb-4 text-primary">3.4 Cookies de Marketing</h3>
-              <p className="mb-4 text-gray-700">
-                Utilizados para fornecer anúncios mais relevantes (com seu consentimento):
-              </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Google Ads:</strong> personalização de anúncios</li>
-                <li><strong>Facebook Pixel:</strong> remarketing em redes sociais</li>
-                <li><strong>LinkedIn Insight:</strong> anúncios profissionais direcionados</li>
-              </ul>
-
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">4. Cookies de Terceiros</h2>
-              <p className="mb-4 text-gray-700">
-                Alguns cookies são definidos por serviços terceirizados que utilizamos:
-              </p>
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Tipos de Cookies que Utilizamos
+              </h2>
               
               <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 mb-6">
+                <table className="w-full border-collapse border border-gray-300 mb-6">
                   <thead>
                     <tr className="bg-gray-50">
-                      <th className="border border-gray-300 px-4 py-2 text-left">Serviço</th>
+                      <th className="border border-gray-300 px-4 py-2 text-left">Cookie</th>
                       <th className="border border-gray-300 px-4 py-2 text-left">Finalidade</th>
                       <th className="border border-gray-300 px-4 py-2 text-left">Duração</th>
+                      <th className="border border-gray-300 px-4 py-2 text-left">Tipo</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="border border-gray-300 px-4 py-2">Google Analytics</td>
-                      <td className="border border-gray-300 px-4 py-2">Análise de uso do site</td>
-                      <td className="border border-gray-300 px-4 py-2">24 meses</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-300 px-4 py-2">Stripe</td>
-                      <td className="border border-gray-300 px-4 py-2">Processamento de pagamentos</td>
+                      <td className="border border-gray-300 px-4 py-2">_session</td>
+                      <td className="border border-gray-300 px-4 py-2">Manter login do usuário</td>
                       <td className="border border-gray-300 px-4 py-2">Sessão</td>
+                      <td className="border border-gray-300 px-4 py-2">Essencial</td>
                     </tr>
                     <tr>
-                      <td className="border border-gray-300 px-4 py-2">Intercom</td>
-                      <td className="border border-gray-300 px-4 py-2">Chat de suporte</td>
-                      <td className="border border-gray-300 px-4 py-2">12 meses</td>
+                      <td className="border border-gray-300 px-4 py-2">_preferences</td>
+                      <td className="border border-gray-300 px-4 py-2">Salvar preferências do usuário</td>
+                      <td className="border border-gray-300 px-4 py-2">1 ano</td>
+                      <td className="border border-gray-300 px-4 py-2">Funcional</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">_analytics</td>
+                      <td className="border border-gray-300 px-4 py-2">Google Analytics</td>
+                      <td className="border border-gray-300 px-4 py-2">2 anos</td>
+                      <td className="border border-gray-300 px-4 py-2">Performance</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-gray-300 px-4 py-2">_marketing</td>
+                      <td className="border border-gray-300 px-4 py-2">Publicidade personalizada</td>
+                      <td className="border border-gray-300 px-4 py-2">30 dias</td>
+                      <td className="border border-gray-300 px-4 py-2">Marketing</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+            </section>
 
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">5. Gerenciamento de Cookies</h2>
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Cookies de Terceiros
+              </h2>
+              <p className="mb-4">
+                Utilizamos serviços de terceiros que podem definir cookies em nosso site:
+              </p>
+              <ul>
+                <li><strong>Google Analytics:</strong> Para análise de tráfego e comportamento</li>
+                <li><strong>Google Ads:</strong> Para publicidade direcionada</li>
+                <li><strong>Facebook Pixel:</strong> Para rastreamento de conversões</li>
+                <li><strong>Hotjar:</strong> Para análise de experiência do usuário</li>
+              </ul>
+            </section>
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Gerenciamento de Cookies
+              </h2>
+              <p className="mb-4">
+                Você pode controlar e gerenciar cookies de várias maneiras:
+              </p>
               
-              <h3 className="text-xl font-semibold mb-4 text-primary">5.1 Configurações do Navegador</h3>
-              <p className="mb-4 text-gray-700">
-                Você pode controlar cookies através das configurações do seu navegador:
+              <h3 className="text-xl font-semibold mb-3">Configurações do Navegador</h3>
+              <p className="mb-4">
+                A maioria dos navegadores permite que você:
               </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Chrome:</strong> Configurações > Privacidade e segurança > Cookies</li>
-                <li><strong>Firefox:</strong> Configurações > Privacidade e segurança</li>
-                <li><strong>Safari:</strong> Preferências > Privacidade</li>
-                <li><strong>Edge:</strong> Configurações > Cookies e permissões de site</li>
+              <ul className="mb-4">
+                <li>Veja quais cookies estão armazenados</li>
+                <li>Delete cookies individualmente ou todos</li>
+                <li>Bloqueie cookies de sites específicos</li>
+                <li>Bloqueie cookies de terceiros</li>
+                <li>Delete todos os cookies ao fechar o navegador</li>
               </ul>
 
-              <h3 className="text-xl font-semibold mb-4 text-primary">5.2 Centro de Preferências</h3>
-              <p className="mb-6 text-gray-700">
-                Oferecemos um centro de preferências onde você pode:
-              </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li>Ativar/desativar categorias específicas de cookies</li>
-                <li>Ver detalhes sobre cada tipo de cookie</li>
-                <li>Alterar suas preferências a qualquer momento</li>
-                <li>Revogar consentimentos previamente dados</li>
+              <h3 className="text-xl font-semibold mb-3">Configurações por Navegador</h3>
+              <ul>
+                <li><strong>Chrome:</strong> Configurações {">"} Privacidade e segurança {">"} Cookies</li>
+                <li><strong>Firefox:</strong> Preferências {">"} Privacidade e Segurança</li>
+                <li><strong>Safari:</strong> Preferências {">"} Privacidade</li>
+                <li><strong>Edge:</strong> Configurações {">"} Privacidade e serviços</li>
               </ul>
+            </section>
 
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">6. Impacto da Desabilitação</h2>
-              <p className="mb-4 text-gray-700">
-                Desabilitar cookies pode afetar a funcionalidade do site:
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Impacto da Desabilitação de Cookies
+              </h2>
+              <p className="mb-4">
+                Desabilitar cookies pode afetar sua experiência no site:
               </p>
-              <ul className="list-disc pl-6 mb-6 text-gray-700">
-                <li><strong>Cookies essenciais:</strong> site pode não funcionar corretamente</li>
-                <li><strong>Cookies de performance:</strong> não poderemos melhorar o site baseado no uso</li>
-                <li><strong>Cookies de funcionalidade:</strong> preferências não serão lembradas</li>
-                <li><strong>Cookies de marketing:</strong> anúncios podem ser menos relevantes</li>
+              <ul>
+                <li>Você pode precisar fazer login a cada visita</li>
+                <li>Algumas funcionalidades podem não funcionar corretamente</li>
+                <li>Suas preferências não serão salvas</li>
+                <li>O conteúdo pode não ser personalizado</li>
               </ul>
+            </section>
 
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">7. Armazenamento Local</h2>
-              <p className="mb-6 text-gray-700">
-                Além de cookies, também utilizamos tecnologias de armazenamento local (localStorage, sessionStorage) para melhorar a performance e experiência do usuário. Estes dados ficam apenas no seu dispositivo e não são transmitidos para nossos servidores.
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Atualizações desta Política
+              </h2>
+              <p>
+                Podemos atualizar esta Política de Cookies periodicamente. Quando fizermos alterações, 
+                atualizaremos a data na parte superior desta página e notificaremos você através do site 
+                ou por email, quando apropriado.
               </p>
+            </section>
 
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">8. Atualizações desta Política</h2>
-              <p className="mb-6 text-gray-700">
-                Esta política de cookies pode ser atualizada periodicamente para refletir mudanças em nossas práticas ou por outros motivos operacionais, legais ou regulatórios. Recomendamos que verifique esta página regularmente.
+            <section className="mb-8">
+              <h2 className="text-2xl font-montserrat font-semibold mb-4 text-primary">
+                Contato
+              </h2>
+              <p>
+                Se você tiver dúvidas sobre nossa Política de Cookies, entre em contato conosco:
               </p>
+              <ul className="mt-4">
+                <li><strong>Email:</strong> privacidade@arquiconnect.com.br</li>
+                <li><strong>Telefone:</strong> (11) 3000-0000</li>
+                <li><strong>Endereço:</strong> Rua da Inovação, 123 - São Paulo, SP</li>
+              </ul>
+            </section>
+          </div>
 
-              <h2 className="text-2xl font-montserrat font-bold mb-6 text-primary">9. Contato</h2>
-              <p className="mb-6 text-gray-700">
-                Se você tiver dúvidas sobre nossa política de cookies:
-                <br />Email: privacy@arquiconnect.com.br
-                <br />Telefone: (19) 99184-8687
-              </p>
-
-              <div className="bg-primary/5 p-6 rounded-lg mt-8">
-                <h3 className="text-lg font-semibold mb-4 text-primary">💡 Dica Importante</h3>
-                <p className="text-gray-700">
-                  Para uma melhor experiência na plataforma ArquiConnect, recomendamos manter os cookies essenciais e de funcionalidade habilitados. Isso garantirá que você tenha acesso a todos os recursos e que suas preferências sejam mantidas.
-                </p>
-              </div>
-              
+          <div className="mt-12 pt-8 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/termos" 
+                className="text-primary hover:text-accent font-medium"
+              >
+                Termos de Serviço
+              </Link>
+              <Link 
+                to="/privacidade" 
+                className="text-primary hover:text-accent font-medium"
+              >
+                Política de Privacidade
+              </Link>
+              <Link 
+                to="/copyright" 
+                className="text-primary hover:text-accent font-medium"
+              >
+                Copyright
+              </Link>
             </div>
           </div>
-        </section>
+        </div>
       </main>
       
       <Footer />
