@@ -1,6 +1,7 @@
 
 import { Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 interface PricingCardProps {
   title: string;
@@ -9,7 +10,7 @@ interface PricingCardProps {
   features: string[];
   isPopular?: boolean;
   buttonText: string;
-  buttonLink: string;
+  planType: string;
 }
 
 const PricingCard = ({
@@ -19,8 +20,27 @@ const PricingCard = ({
   features,
   isPopular = false,
   buttonText,
-  buttonLink
+  planType
 }: PricingCardProps) => {
+  const { isAuthenticated, createCheckout, subscription } = useAuth();
+
+  const handleSubscribe = async () => {
+    if (!isAuthenticated) {
+      toast.error('Você precisa estar logado para assinar um plano');
+      return;
+    }
+
+    try {
+      await createCheckout(planType);
+      toast.success('Redirecionando para o checkout...');
+    } catch (error) {
+      console.error('Erro ao criar checkout:', error);
+      toast.error('Erro ao processar pagamento. Tente novamente.');
+    }
+  };
+
+  const isCurrentPlan = subscription.subscription_tier === title;
+
   return (
     <div className={`
       bg-white rounded-xl shadow-lg overflow-hidden border transition-all 
@@ -28,6 +48,7 @@ const PricingCard = ({
         ? 'border-accent scale-105 md:scale-110 relative z-10' 
         : 'border-gray-200 hover:-translate-y-2'
       }
+      ${isCurrentPlan ? 'ring-2 ring-green-500' : ''}
     `}>
       {isPopular && (
         <div className="bg-accent text-white text-center py-2 font-medium">
@@ -35,13 +56,17 @@ const PricingCard = ({
         </div>
       )}
       
+      {isCurrentPlan && (
+        <div className="bg-green-500 text-white text-center py-2 font-medium">
+          Seu Plano Atual
+        </div>
+      )}
+      
       <div className="p-8">
         <h3 className="text-xl font-montserrat font-bold text-primary">{title}</h3>
         <div className="mt-4 flex items-baseline">
-          <span className="text-4xl font-bold text-primary">{price}</span>
-          {price !== "Grátis" && (
-            <span className="ml-1 text-lg text-gray-500">/mês</span>
-          )}
+          <span className="text-4xl font-bold text-primary">R${price}</span>
+          <span className="ml-1 text-lg text-gray-500">/mês</span>
         </div>
         
         <p className="mt-4 text-gray-600">{description}</p>
@@ -58,18 +83,21 @@ const PricingCard = ({
         </ul>
         
         <div className="mt-8">
-          <Link
-            to={buttonLink}
+          <button
+            onClick={handleSubscribe}
+            disabled={isCurrentPlan}
             className={`
               w-full px-4 py-3 text-center font-medium rounded-lg transition-colors
-              ${isPopular 
-                ? 'bg-accent text-white hover:bg-accent-dark' 
-                : 'bg-primary text-white hover:bg-primary-light'
+              ${isCurrentPlan
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : isPopular 
+                  ? 'bg-accent text-white hover:bg-accent-dark' 
+                  : 'bg-primary text-white hover:bg-primary-light'
               }
             `}
           >
-            {buttonText}
-          </Link>
+            {isCurrentPlan ? 'Plano Atual' : buttonText}
+          </button>
         </div>
       </div>
     </div>

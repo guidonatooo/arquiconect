@@ -2,12 +2,13 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CallToAction from '../components/CallToAction';
 import { Check, HelpCircle, X } from 'lucide-react';
+import PricingCard from '@/components/PricingCard';
 
 const Pricing = () => {
   const plans = [
     {
       name: "Básico",
-      price: 199,
+      price: "199",
       period: "mês",
       description: "Ideal para pequenos fornecedores",
       features: [
@@ -20,11 +21,12 @@ const Pricing = () => {
         { text: "API de integração", included: false },
       ],
       popular: false,
-      buttonText: "Assine Agora!"
+      buttonText: "Assinar Plano",
+      planType: "basic"
     },
     {
       name: "Profissional",
-      price: 399,
+      price: "399",
       period: "mês",
       description: "Para fornecedores em crescimento",
       features: [
@@ -37,11 +39,12 @@ const Pricing = () => {
         { text: "API de integração", included: false },
       ],
       popular: true,
-      buttonText: "Assine Agora!"
+      buttonText: "Assinar Plano",
+      planType: "professional"
     },
     {
       name: "Premium",
-      price: 799,
+      price: "799",
       period: "mês",
       description: "Para grandes fornecedores",
       features: [
@@ -54,7 +57,8 @@ const Pricing = () => {
         { text: "API de integração", included: true },
       ],
       popular: false,
-      buttonText: "Assine Agora!"
+      buttonText: "Assinar Plano",
+      planType: "premium"
     }
   ];
 
@@ -111,53 +115,16 @@ const Pricing = () => {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {plans.map((plan, index) => (
-                <div 
-                  key={index} 
-                  className={`bg-white rounded-lg overflow-hidden ${
-                    plan.popular 
-                      ? "border-2 border-primary shadow-lg transform md:-translate-y-4" 
-                      : "border border-gray-200 shadow-md"
-                  }`}
-                >
-                  {plan.popular && (
-                    <div className="bg-accent text-white text-center py-2 font-medium">
-                      Mais Popular
-                    </div>
-                  )}
-                  
-                  <div className={`p-6 ${plan.popular ? "bg-primary/5" : "bg-gray-50"}`}>
-                    <h3 className="text-xl font-montserrat font-bold text-primary mb-2">{plan.name}</h3>
-                    <div className="flex items-end gap-1">
-                      <span className="text-3xl font-bold">R${plan.price}</span>
-                      <span className="text-gray-500">/{plan.period}</span>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-2">{plan.description}</p>
-                  </div>
-                  
-                  <div className="p-6">
-                    <ul className="space-y-4">
-                      {plan.features.map((feature, featureIdx) => (
-                        <li key={featureIdx} className="flex items-start">
-                          {feature.included ? (
-                            <Check className="text-accent mr-2 mt-1 shrink-0" size={16} />
-                          ) : (
-                            <X className="text-gray-400 mr-2 mt-1 shrink-0" size={16} />
-                          )}
-                          <span className={feature.included ? "" : "text-gray-400"}>{feature.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <button 
-                      className={`w-full mt-6 py-2 rounded-md transition-colors ${
-                        plan.popular 
-                          ? "bg-accent text-white hover:bg-accent-dark" 
-                          : "bg-primary text-white hover:bg-primary-dark"
-                      }`}
-                    >
-                      {plan.buttonText}
-                    </button>
-                  </div>
-                </div>
+                <PricingCard
+                  key={index}
+                  title={plan.name}
+                  price={plan.price}
+                  description={plan.description}
+                  features={plan.features.map(f => f.text)}
+                  isPopular={plan.popular}
+                  buttonText={plan.buttonText}
+                  planType={plan.planType}
+                />
               ))}
             </div>
             

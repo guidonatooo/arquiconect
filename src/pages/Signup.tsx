@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ const signupSchema = z.object({
   confirmPassword: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
   phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos").optional(),
   accountType: z.enum(["architect", "supplier"]),
+  selectedPlan: z.enum(["basic", "professional", "premium"]).optional(),
   acceptTerms: z.boolean().refine(val => val === true, {
     message: "Você precisa aceitar os termos"
   })
@@ -33,7 +33,7 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { signup } = useAuth();
+  const { signup, createCheckout } = useAuth();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -44,16 +44,22 @@ const Signup = () => {
       confirmPassword: "",
       phone: "",
       accountType: "architect",
+      selectedPlan: undefined,
       acceptTerms: false,
     },
   });
+
+  const plans = [
+    { id: "basic", name: "Básico", price: "R$ 199/mês", description: "Ideal para pequenos fornecedores" },
+    { id: "professional", name: "Profissional", price: "R$ 399/mês", description: "Para fornecedores em crescimento" },
+    { id: "premium", name: "Premium", price: "R$ 799/mês", description: "Para grandes fornecedores" }
+  ];
 
   const onSubmit = async (values: SignupFormValues) => {
     setIsLoading(true);
     try {
       console.log("Signup values:", values);
       
-      // Criar objeto compatível com a interface User
       const userData = {
         name: values.name,
         email: values.email,
@@ -65,11 +71,22 @@ const Signup = () => {
       await signup(userData);
       toast.success("Cadastro realizado com sucesso!");
       
+      // Se um plano foi selecionado, redirecionar para o checkout
+      if (values.selectedPlan) {
+        try {
+          await createCheckout(values.selectedPlan);
+          toast.success("Redirecionando para o pagamento...");
+        } catch (error) {
+          console.error("Erro ao criar checkout:", error);
+          toast.error("Erro ao processar pagamento. Você pode assinar um plano mais tarde.");
+        }
+      }
+      
       // Redireciona baseado no tipo de usuário
       if (values.accountType === 'supplier') {
         navigate("/suppliers");
       } else {
-        navigate("/projects"); // arquitetos vão para projetos
+        navigate("/projects");
       }
     } catch (error) {
       console.error("Erro ao fazer cadastro:", error);
@@ -78,6 +95,8 @@ const Signup = () => {
       setIsLoading(false);
     }
   };
+
+  const accountType = form.watch("accountType");
 
   return (
     <>
@@ -181,6 +200,41 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Show plan selection only for suppliers */}
+              {accountType === "supplier" && (
+                <FormField
+                  control={form.control}
+                  name="selectedPlan"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Escolha seu plano (opcional)</FormLabel>
+                      <div className="space-y-3 mt-2">
+                        {plans.map((plan) => (
+                          <Button
+                            key={plan.id}
+                            type="button"
+                            variant={field.value === plan.id ? "default" : "outline"}
+                            className="w-full h-auto p-4 text-left flex flex-col items-start"
+                            onClick={() => field.onChange(plan.id)}
+                            disabled={isLoading}
+                          >
+                            <div className="flex justify-between w-full">
+                              <span className="font-medium">{plan.name}</span>
+                              <span className="text-sm text-primary">{plan.price}</span>
+                            </div>
+                            <span className="text-xs text-muted-foreground mt-1">{plan.description}</span>
+                          </Button>
+                        ))}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Você pode escolher um plano agora ou fazer isso mais tarde
+                      </p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               <FormField
                 control={form.control}
