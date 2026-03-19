@@ -23,7 +23,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -34,26 +34,28 @@ const Login = () => {
     },
   });
 
+  // Already authenticated — redirect
+  if (user) {
+    navigate(user.accountType === "supplier" ? "/suppliers" : "/projects");
+    return null;
+  }
+
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
     try {
-      console.log("Login values:", values);
       await login(values.email, values.password);
-      
-      // Busca o tipo de usuário do localStorage
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
-      toast.success("Login realizado com sucesso!");
-      
-      // Redireciona baseado no tipo de usuário
-      if (user.accountType === 'supplier') {
-        navigate("/suppliers");
+
+      if (values.rememberMe) {
+        localStorage.setItem("rememberEmail", values.email);
       } else {
-        navigate("/projects"); // arquitetos vão para projetos
+        localStorage.removeItem("rememberEmail");
       }
+
+      toast.success("Login realizado com sucesso!");
+      // Redirect handled by AuthContext state change + above guard
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      toast.error("Falha ao fazer login. Verifique suas credenciais.");
+      const message = error instanceof Error ? error.message : "Falha ao fazer login. Tente novamente.";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -80,12 +82,12 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="seu-email@exemplo.com" 
-                        type="email" 
+                      <Input
+                        placeholder="seu-email@exemplo.com"
+                        type="email"
                         autoComplete="email"
                         disabled={isLoading}
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -100,12 +102,12 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Senha</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="••••••••" 
-                        type="password" 
+                      <Input
+                        placeholder="••••••••"
+                        type="password"
                         autoComplete="current-password"
                         disabled={isLoading}
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -119,32 +121,29 @@ const Login = () => {
                   name="rememberMe"
                   render={({ field }) => (
                     <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="rememberMe" 
+                      <Checkbox
+                        id="rememberMe"
                         disabled={isLoading}
-                        checked={field.value} 
-                        onCheckedChange={field.onChange} 
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
                       />
-                      <label 
-                        htmlFor="rememberMe" 
-                        className="text-sm cursor-pointer"
-                      >
-                        Lembrar-me
+                      <label htmlFor="rememberMe" className="text-sm cursor-pointer">
+                        Lembrar e-mail
                       </label>
                     </div>
                   )}
                 />
-                <Link 
-                  to="/esqueci-senha" 
+                <Link
+                  to="/esqueci-senha"
                   className="text-sm text-primary hover:underline"
                 >
                   Esqueceu a senha?
                 </Link>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={isLoading}
               >
                 {isLoading ? "Entrando..." : "Entrar"}

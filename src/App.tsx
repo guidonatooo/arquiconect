@@ -16,6 +16,7 @@ import BlogPost from "./pages/BlogPost";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Suppliers from "./pages/Suppliers";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/contato" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Signup />} />
+            <Route path="/esqueci-senha" element={<ForgotPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/suppliers" element={<Suppliers />} />
