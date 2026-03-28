@@ -1,128 +1,108 @@
 
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, User, LayoutDashboard } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, LogOut, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-
-const NAV_LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/como-funciona", label: "Como Funciona" },
-  { to: "/para-arquitetos", label: "Para Arquitetos" },
-  { to: "/para-fornecedores", label: "Para Fornecedores" },
-  { to: "/precos", label: "Planos e Preços" },
-  { to: "/blog", label: "Blog" },
-  { to: "/contato", label: "Contato" },
-];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const closeMenu = () => setIsMenuOpen(false);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
     toast.success("Logout realizado com sucesso!");
     navigate("/");
-    closeMenu();
+    setIsMenuOpen(false);
   };
 
-  const isActive = (path: string) => {
-    if (path === "/") return location.pathname === "/";
-    return location.pathname.startsWith(path);
+  const getUserTypeLabel = () => {
+    return user?.accountType === "architect" ? "Arquiteto(a)" : "Fornecedor(a)";
   };
-
-  const linkClass = (path: string, mobile = false) => {
-    const base = mobile
-      ? "font-medium py-2 block"
-      : "font-medium text-sm";
-    const active = isActive(path)
-      ? "text-primary font-semibold"
-      : "text-gray-700 hover:text-primary";
-    return `${base} ${active} transition-colors`;
-  };
-
-  const getUserTypeLabel = () =>
-    user?.accountType === "architect" ? "Arquiteto(a)" : "Fornecedor(a)";
-
-  const dashboardRoute = user?.accountType === "supplier" ? "/suppliers" : "/projects";
 
   return (
     <header className="bg-white py-4 shadow-sm sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center shrink-0">
-          <div className="w-10 h-10 bg-primary rounded-md flex items-center justify-center mr-2">
-            <div className="w-6 h-6 border-2 border-white rounded-sm transform rotate-45" />
-          </div>
-          <span className="text-primary font-montserrat font-bold text-xl">ArquiConnect</span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center space-x-6">
-          {NAV_LINKS.map(({ to, label }) => (
-            <Link key={to} to={to} className={linkClass(to)}>
-              {label}
-            </Link>
-          ))}
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-primary rounded-md flex items-center justify-center mr-2">
+                <div className="w-6 h-6 border-2 border-white rounded-sm transform rotate-45"></div>
+              </div>
+              <span className="text-primary font-montserrat font-bold text-xl">ArquiConnect</span>
+            </div>
+          </Link>
+        </div>
+        
+        <nav className="hidden lg:flex items-center space-x-8">
+          <Link to="/" className="text-gray-700 hover:text-primary font-medium">
+            Home
+          </Link>
           {isAuthenticated && (
-            <Link to="/dashboard" className={linkClass("/dashboard")}>
+            <Link to="/dashboard" className="text-gray-700 hover:text-primary font-medium">
               Dashboard
             </Link>
           )}
+          <Link to="/como-funciona" className="text-gray-700 hover:text-primary font-medium">
+            Como Funciona
+          </Link>
+          <Link to="/para-arquitetos" className="text-gray-700 hover:text-primary font-medium">
+            Para Arquitetos
+          </Link>
+          <Link to="/para-fornecedores" className="text-gray-700 hover:text-primary font-medium">
+            Para Fornecedores
+          </Link>
+          <Link to="/precos" className="text-gray-700 hover:text-primary font-medium">
+            Planos e Preços
+          </Link>
+          <Link to="/blog" className="text-gray-700 hover:text-primary font-medium">
+            Blog
+          </Link>
+          <Link to="/contato" className="text-gray-700 hover:text-primary font-medium">
+            Contato
+          </Link>
         </nav>
 
-        {/* Desktop Auth */}
-        <div className="hidden lg:flex items-center space-x-4 shrink-0">
+        <div className="hidden lg:flex items-center space-x-4">
           {isAuthenticated && user ? (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-gray-700">
-                <User size={16} />
+                <User size={18} />
                 <span className="text-sm">
-                  {user.name} · {getUserTypeLabel()}
+                  {user.name} • {getUserTypeLabel()}
                 </span>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(dashboardRoute)}
-                className="text-primary"
-              >
-                <LayoutDashboard size={15} className="mr-1.5" />
-                Painel
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
+              <Button 
+                variant="outline" 
                 onClick={handleLogout}
-                className="flex items-center space-x-1.5"
+                className="flex items-center space-x-2"
               >
-                <LogOut size={15} />
+                <LogOut size={16} />
                 <span>Sair</span>
               </Button>
             </div>
           ) : (
             <>
-              <Link to="/login" className="text-primary font-medium hover:text-primary-dark text-sm">
+              <Link to="/login" className="text-primary font-medium hover:text-primary-dark">
                 Login
               </Link>
-              <Button asChild size="sm">
-                <Link to="/cadastro">Cadastre-se</Link>
-              </Button>
+              <Link to="/cadastro" className="btn-accent">
+                Cadastre-se
+              </Link>
             </>
           )}
         </div>
-
-        {/* Mobile toggle */}
-        <button
-          className="lg:hidden text-gray-700 focus:outline-none p-1"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-          aria-expanded={isMenuOpen}
+        
+        <button 
+          className="lg:hidden text-gray-700 focus:outline-none"
+          onClick={toggleMenu}
+          aria-label="Menu"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -131,70 +111,101 @@ const Header = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden py-4 px-4 bg-white border-t">
-          <nav className="flex flex-col space-y-1">
-            {NAV_LINKS.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className={linkClass(to, true)}
-                onClick={closeMenu}
-              >
-                {label}
-              </Link>
-            ))}
+          <nav className="flex flex-col space-y-4">
+            <Link 
+              to="/" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
             {isAuthenticated && (
-              <Link
-                to="/dashboard"
-                className={linkClass("/dashboard", true)}
-                onClick={closeMenu}
+              <Link 
+                to="/dashboard" 
+                className="text-gray-700 hover:text-primary font-medium py-2"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard
               </Link>
             )}
-
-            <div className="pt-4 mt-2 border-t space-y-3">
-              {isAuthenticated && user ? (
-                <>
-                  <div className="flex items-center space-x-2 text-gray-700 py-1">
-                    <User size={16} />
-                    <span className="text-sm">
-                      {user.name} · {getUserTypeLabel()}
-                    </span>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => { navigate(dashboardRoute); closeMenu(); }}
-                  >
-                    <LayoutDashboard size={15} className="mr-2" />
-                    Meu Painel
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleLogout}
-                    className="w-full justify-start"
-                  >
-                    <LogOut size={15} className="mr-2" />
-                    Sair
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="block text-primary font-medium py-2"
-                    onClick={closeMenu}
-                  >
-                    Login
-                  </Link>
-                  <Button asChild className="w-full">
-                    <Link to="/cadastro" onClick={closeMenu}>
-                      Cadastre-se
-                    </Link>
-                  </Button>
-                </>
-              )}
-            </div>
+            <Link 
+              to="/como-funciona" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Como Funciona
+            </Link>
+            <Link 
+              to="/para-arquitetos" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Para Arquitetos
+            </Link>
+            <Link 
+              to="/para-fornecedores" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Para Fornecedores
+            </Link>
+            <Link 
+              to="/precos" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Planos e Preços
+            </Link>
+            <Link 
+              to="/blog" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Blog
+            </Link>
+            <Link 
+              to="/contato" 
+              className="text-gray-700 hover:text-primary font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contato
+            </Link>
+            
+            {isAuthenticated && user ? (
+              <div className="flex flex-col space-y-3 pt-4 border-t">
+                <div className="flex items-center space-x-2 text-gray-700 py-2">
+                  <User size={18} />
+                  <span className="text-sm">
+                    {user.name} • {getUserTypeLabel()}
+                  </span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={handleLogout}
+                  className="flex items-center justify-center space-x-2 w-full"
+                >
+                  <LogOut size={16} />
+                  <span>Sair</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-3 pt-4 border-t">
+                <Link 
+                  to="/login" 
+                  className="text-primary font-medium hover:text-primary-dark py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/cadastro" 
+                  className="btn-accent text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Cadastre-se
+                </Link>
+              </div>
+            )}
           </nav>
         </div>
       )}

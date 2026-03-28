@@ -15,23 +15,13 @@ import { useAuth } from "@/contexts/AuthContext";
 const signupSchema = z.object({
   name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
   email: z.string().email("Digite um e-mail válido"),
-  password: z
-    .string()
-    .min(8, "A senha deve ter pelo menos 8 caracteres")
-    .regex(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula")
-    .regex(/[0-9]/, "A senha deve conter pelo menos um número"),
-  confirmPassword: z.string().min(1, "Confirme sua senha"),
-  phone: z
-    .string()
-    .optional()
-    .refine(
-      (v) => !v || /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/.test(v.replace(/\s/g, '')),
-      "Telefone inválido. Use o formato (00) 00000-0000"
-    ),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+  confirmPassword: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+  phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos").optional(),
   accountType: z.enum(["architect", "supplier"]),
   selectedPlan: z.enum(["basic", "professional", "premium"]).optional(),
   acceptTerms: z.boolean().refine(val => val === true, {
-    message: "Você precisa aceitar os termos para continuar"
+    message: "Você precisa aceitar os termos"
   })
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não coincidem",
@@ -40,31 +30,10 @@ const signupSchema = z.object({
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-const PLANS = [
-  { id: "basic", name: "Básico", price: "R$ 199/mês", description: "Ideal para pequenos fornecedores — 10 propostas/mês" },
-  { id: "professional", name: "Profissional", price: "R$ 399/mês", description: "Para fornecedores em crescimento — 30 propostas/mês" },
-  { id: "premium", name: "Premium", price: "R$ 799/mês", description: "Para grandes fornecedores — propostas ilimitadas" }
-] as const;
-
-const getPasswordStrength = (password: string): { level: number; label: string; color: string } => {
-  let score = 0;
-  if (password.length >= 8) score++;
-  if (password.length >= 12) score++;
-  if (/[A-Z]/.test(password)) score++;
-  if (/[0-9]/.test(password)) score++;
-  if (/[^A-Za-z0-9]/.test(password)) score++;
-
-  if (score <= 1) return { level: score, label: "Muito fraca", color: "bg-red-500" };
-  if (score <= 2) return { level: score, label: "Fraca", color: "bg-orange-500" };
-  if (score <= 3) return { level: score, label: "Média", color: "bg-yellow-500" };
-  if (score <= 4) return { level: score, label: "Forte", color: "bg-green-500" };
-  return { level: score, label: "Muito forte", color: "bg-green-600" };
-};
-
 const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { signup, createCheckout, user } = useAuth();
+  const { signup, createCheckout } = useAuth();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -80,46 +49,54 @@ const Signup = () => {
     },
   });
 
-  // Already authenticated — redirect
-  if (user) {
-    navigate(user.accountType === "supplier" ? "/suppliers" : "/projects");
-    return null;
-  }
-
-  const password = form.watch("password");
-  const accountType = form.watch("accountType");
-  const strength = password ? getPasswordStrength(password) : null;
+  const plans = [
+    { id: "basic", name: "Básico", price: "R$ 199/mês", description: "Ideal para pequenos fornecedores" },
+    { id: "professional", name: "Profissional", price: "R$ 399/mês", description: "Para fornecedores em crescimento" },
+    { id: "premium", name: "Premium", price: "R$ 799/mês", description: "Para grandes fornecedores" }
+  ];
 
   const onSubmit = async (values: SignupFormValues) => {
     setIsLoading(true);
     try {
-      await signup({
+      console.log("Signup values:", values);
+      
+      const userData = {
         name: values.name,
         email: values.email,
         accountType: values.accountType,
         phone: values.phone || undefined,
-        password: values.password,
-      });
-
-      toast.success("Conta criada com sucesso! Verifique seu e-mail para confirmar o cadastro.");
-
-      // If a plan was selected, open checkout
+        password: values.password
+      };
+      
+      await signup(userData);
+      toast.success("Cadastro realizado com sucesso!");
+      
+      // Se um plano foi selecionado, redirecionar para o checkout
       if (values.selectedPlan) {
         try {
           await createCheckout(values.selectedPlan);
-        } catch {
-          toast.error("Erro ao iniciar pagamento. Você pode assinar um plano no seu painel.");
+          toast.success("Redirecionando para o pagamento...");
+        } catch (error) {
+          console.error("Erro ao criar checkout:", error);
+          toast.error("Erro ao processar pagamento. Você pode assinar um plano mais tarde.");
         }
       }
-
-      navigate(values.accountType === 'supplier' ? "/suppliers" : "/projects");
+      
+      // Redireciona baseado no tipo de usuário
+      if (values.accountType === 'supplier') {
+        navigate("/suppliers");
+      } else {
+        navigate("/projects");
+      }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Falha ao criar conta. Tente novamente.";
-      toast.error(message);
+      console.error("Erro ao fazer cadastro:", error);
+      toast.error("Falha ao criar conta. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const accountType = form.watch("accountType");
 
   return (
     <>
@@ -142,7 +119,11 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Nome completo</FormLabel>
                     <FormControl>
-                      <Input placeholder="Seu nome" disabled={isLoading} {...field} />
+                      <Input 
+                        placeholder="Seu nome" 
+                        disabled={isLoading}
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -156,32 +137,32 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="seu-email@exemplo.com"
+                      <Input 
+                        placeholder="seu-email@exemplo.com" 
                         type="email"
-                        autoComplete="email"
+                        autoComplete="email" 
                         disabled={isLoading}
-                        {...field}
+                        {...field} 
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
+              
               <FormField
                 control={form.control}
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Telefone <span className="text-gray-400 font-normal">(opcional)</span></FormLabel>
+                    <FormLabel>Telefone</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="(00) 00000-0000"
+                      <Input 
+                        placeholder="(00) 00000-0000" 
                         type="tel"
-                        autoComplete="tel"
+                        autoComplete="tel" 
                         disabled={isLoading}
-                        {...field}
+                        {...field} 
                       />
                     </FormControl>
                     <FormMessage />
@@ -220,37 +201,34 @@ const Signup = () => {
                 )}
               />
 
-              {/* Plan selection only for suppliers */}
+              {/* Show plan selection only for suppliers */}
               {accountType === "supplier" && (
                 <FormField
                   control={form.control}
                   name="selectedPlan"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Escolha seu plano <span className="text-gray-400 font-normal">(opcional)</span></FormLabel>
+                      <FormLabel>Escolha seu plano (opcional)</FormLabel>
                       <div className="space-y-3 mt-2">
-                        {PLANS.map((plan) => (
-                          <button
+                        {plans.map((plan) => (
+                          <Button
                             key={plan.id}
                             type="button"
-                            className={`w-full p-4 rounded-md border text-left transition-colors ${
-                              field.value === plan.id
-                                ? 'border-primary bg-primary/5'
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            onClick={() => field.onChange(field.value === plan.id ? undefined : plan.id)}
+                            variant={field.value === plan.id ? "default" : "outline"}
+                            className="w-full h-auto p-4 text-left flex flex-col items-start"
+                            onClick={() => field.onChange(plan.id)}
                             disabled={isLoading}
                           >
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between w-full">
                               <span className="font-medium">{plan.name}</span>
-                              <span className="text-sm text-primary font-semibold">{plan.price}</span>
+                              <span className="text-sm text-primary">{plan.price}</span>
                             </div>
-                            <p className="text-xs text-muted-foreground mt-1">{plan.description}</p>
-                          </button>
+                            <span className="text-xs text-muted-foreground mt-1">{plan.description}</span>
+                          </Button>
                         ))}
                       </div>
                       <p className="text-xs text-muted-foreground mt-2">
-                        Você pode escolher ou alterar seu plano a qualquer momento no painel
+                        Você pode escolher um plano agora ou fazer isso mais tarde
                       </p>
                       <FormMessage />
                     </FormItem>
@@ -265,29 +243,14 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Senha</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="••••••••"
-                        type="password"
+                      <Input 
+                        placeholder="••••••••" 
+                        type="password" 
                         autoComplete="new-password"
                         disabled={isLoading}
-                        {...field}
+                        {...field} 
                       />
                     </FormControl>
-                    {password && strength && (
-                      <div className="mt-1">
-                        <div className="flex gap-1 mb-1">
-                          {[1, 2, 3, 4, 5].map(i => (
-                            <div
-                              key={i}
-                              className={`h-1 flex-1 rounded-full transition-colors ${
-                                i <= strength.level ? strength.color : 'bg-gray-200'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500">{strength.label}</p>
-                      </div>
-                    )}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -300,12 +263,12 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Confirme sua senha</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="••••••••"
-                        type="password"
+                      <Input 
+                        placeholder="••••••••" 
+                        type="password" 
                         autoComplete="new-password"
                         disabled={isLoading}
-                        {...field}
+                        {...field} 
                       />
                     </FormControl>
                     <FormMessage />
@@ -319,8 +282,8 @@ const Signup = () => {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-6">
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
+                      <Checkbox 
+                        checked={field.value} 
                         onCheckedChange={field.onChange}
                         disabled={isLoading}
                       />
@@ -331,7 +294,7 @@ const Signup = () => {
                         <Link to="/termos" className="text-primary hover:underline">
                           Termos de Uso
                         </Link>{" "}
-                        e a{" "}
+                        e{" "}
                         <Link to="/privacidade" className="text-primary hover:underline">
                           Política de Privacidade
                         </Link>
@@ -342,7 +305,11 @@ const Signup = () => {
                 )}
               />
 
-              <Button type="submit" className="w-full mt-6" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                className="w-full mt-6" 
+                disabled={isLoading}
+              >
                 {isLoading ? "Criando conta..." : "Criar conta"}
               </Button>
 
