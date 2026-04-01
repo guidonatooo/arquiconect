@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #fdf6ec;
+    font-family: var(--font-nunito), system-ui, sans-serif;
+    color: #3d2c1e;
+  }
+}
+
+@layer components {
+  /* Balloon shape */
+  .balloon {
+    position: absolute;
+    bottom: -120px;
+    width: 48px;
+    height: 60px;
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    animation: var(--animation-float, float-balloon var(--duration, 10s) ease-in-out var(--delay, 0s) infinite),
+               sway var(--sway-dur, 4s) ease-in-out var(--delay, 0s) infinite;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .balloon::before {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: inherit;
+  }
+
+  .balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.5px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  /* Confetti piece */
+  .confetti-piece {
+    position: fixed;
+    top: -20px;
+    width: var(--w, 10px);
+    height: var(--h, 14px);
+    border-radius: var(--br, 2px);
+    opacity: 0;
+    animation: confetti-fall var(--duration, 4s) ease-in var(--delay, 0s) forwards;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  /* Score bar */
+  .score-bar {
+    height: 10px;
+    border-radius: 999px;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Bet card hover */
+  .bet-btn {
+    @apply relative overflow-hidden rounded-2xl py-5 px-8 text-white font-bold text-lg transition-all duration-200;
+    @apply shadow-lg hover:shadow-xl active:scale-95;
+  }
+
+  .bet-btn::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-200;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  }
+
+  .bet-btn:hover::before {
+    @apply opacity-100;
+  }
+}
+
+/* Google Fonts preconnect handled in layout */
